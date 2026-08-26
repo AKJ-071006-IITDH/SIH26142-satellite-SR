@@ -1,0 +1,133 @@
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> python -m src.train                                                                                                          
+Training on: cuda
+Train batches: 154 | Val batches: 31
+C:\Users\AAYUSH KUMAR JHA\sih26142-srm\src\train.py:156: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = torch.cuda.amp.GradScaler()   # mixed precision, per the 6GB VRAM tuning
+C:\Users\AAYUSH KUMAR JHA\sih26142-srm\src\train.py:174: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast():
+C:\Users\AAYUSH KUMAR JHA\sih26142-srm\src\train.py:193: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast():
+Epoch 1/100 | train: 0.0415 | val: 0.0438 | gap: +5.5% | lr: 0.000050
+  -> saved new best checkpoint (val_loss: 0.0438)
+Epoch 2/100 | train: 0.0408 | val: 0.0430 | gap: +5.5% | lr: 0.000050
+  -> saved new best checkpoint (val_loss: 0.0430)
+Epoch 3/100 | train: 0.0407 | val: 0.0438 | gap: +7.7% | lr: 0.000050
+Epoch 4/100 | train: 0.0405 | val: 0.0431 | gap: +6.5% | lr: 0.000050
+Epoch 5/100 | train: 0.0402 | val: 0.0437 | gap: +8.7% | lr: 0.000050
+Epoch 6/100 | train: 0.0403 | val: 0.0428 | gap: +6.2% | lr: 0.000050
+  -> saved new best checkpoint (val_loss: 0.0428)
+Epoch 7/100 | train: 0.0400 | val: 0.0432 | gap: +8.0% | lr: 0.000049
+Epoch 8/100 | train: 0.0400 | val: 0.0426 | gap: +6.5% | lr: 0.000049
+  -> saved new best checkpoint (val_loss: 0.0426)
+Epoch 9/100 | train: 0.0402 | val: 0.0427 | gap: +6.3% | lr: 0.000049
+Epoch 10/100 | train: 0.0398 | val: 0.0425 | gap: +6.7% | lr: 0.000049
+  -> saved new best checkpoint (val_loss: 0.0425)
+Epoch 11/100 | train: 0.0399 | val: 0.0427 | gap: +7.0% | lr: 0.000049
+Epoch 12/100 | train: 0.0398 | val: 0.0426 | gap: +7.0% | lr: 0.000048
+Epoch 13/100 | train: 0.0398 | val: 0.0423 | gap: +6.3% | lr: 0.000048
+  -> saved new best checkpoint (val_loss: 0.0423)
+Epoch 14/100 | train: 0.0397 | val: 0.0422 | gap: +6.3% | lr: 0.000048
+  -> saved new best checkpoint (val_loss: 0.0422)
+Epoch 15/100 | train: 0.0397 | val: 0.0420 | gap: +6.0% | lr: 0.000047
+  -> saved new best checkpoint (val_loss: 0.0420)
+Epoch 16/100 | train: 0.0395 | val: 0.0428 | gap: +8.4% | lr: 0.000047
+Epoch 17/100 | train: 0.0396 | val: 0.0430 | gap: +8.8% | lr: 0.000047
+Epoch 18/100 | train: 0.0396 | val: 0.0423 | gap: +6.8% | lr: 0.000046
+Epoch 19/100 | train: 0.0396 | val: 0.0427 | gap: +7.7% | lr: 0.000046
+Epoch 20/100 | train: 0.0398 | val: 0.0419 | gap: +5.4% | lr: 0.000045
+  -> saved new best checkpoint (val_loss: 0.0419)
+Epoch 21/100 | train: 0.0393 | val: 0.0424 | gap: +8.0% | lr: 0.000045
+Epoch 22/100 | train: 0.0394 | val: 0.0430 | gap: +9.2% | lr: 0.000044
+Epoch 23/100 | train: 0.0393 | val: 0.0418 | gap: +6.2% | lr: 0.000044
+  -> saved new best checkpoint (val_loss: 0.0418)
+Epoch 24/100 | train: 0.0392 | val: 0.0419 | gap: +6.9% | lr: 0.000043
+Epoch 25/100 | train: 0.0392 | val: 0.0423 | gap: +7.8% | lr: 0.000043
+Epoch 26/100 | train: 0.0392 | val: 0.0421 | gap: +7.3% | lr: 0.000042
+Epoch 27/100 | train: 0.0400 | val: 0.0422 | gap: +5.5% | lr: 0.000042
+Epoch 28/100 | train: 0.0391 | val: 0.0433 | gap: +10.7% | lr: 0.000041
+Epoch 29/100 | train: 0.0391 | val: 0.0417 | gap: +6.7% | lr: 0.000040
+  -> saved new best checkpoint (val_loss: 0.0417)
+Epoch 30/100 | train: 0.0390 | val: 0.0418 | gap: +7.3% | lr: 0.000040
+Epoch 31/100 | train: 0.0390 | val: 0.0419 | gap: +7.4% | lr: 0.000039
+Epoch 32/100 | train: 0.0391 | val: 0.0423 | gap: +8.2% | lr: 0.000038
+Epoch 33/100 | train: 0.0393 | val: 0.0415 | gap: +5.8% | lr: 0.000038
+  -> saved new best checkpoint (val_loss: 0.0415)
+Epoch 34/100 | train: 0.0389 | val: 0.0415 | gap: +6.9% | lr: 0.000037
+Epoch 35/100 | train: 0.0388 | val: 0.0414 | gap: +6.8% | lr: 0.000036
+  -> saved new best checkpoint (val_loss: 0.0414)
+Epoch 36/100 | train: 0.0388 | val: 0.0414 | gap: +6.7% | lr: 0.000036
+  -> saved new best checkpoint (val_loss: 0.0414)
+Epoch 37/100 | train: 0.0389 | val: 0.0418 | gap: +7.4% | lr: 0.000035
+Epoch 38/100 | train: 0.0391 | val: 0.0415 | gap: +6.3% | lr: 0.000034
+Epoch 39/100 | train: 0.0389 | val: 0.0415 | gap: +6.8% | lr: 0.000033
+Epoch 40/100 | train: 0.0387 | val: 0.0414 | gap: +7.0% | lr: 0.000033
+  -> saved new best checkpoint (val_loss: 0.0414)
+Epoch 41/100 | train: 0.0387 | val: 0.0414 | gap: +7.0% | lr: 0.000032
+Epoch 42/100 | train: 0.0388 | val: 0.0415 | gap: +7.1% | lr: 0.000031
+Epoch 43/100 | train: 0.0387 | val: 0.0413 | gap: +6.6% | lr: 0.000030
+  -> saved new best checkpoint (val_loss: 0.0413)
+Epoch 44/100 | train: 0.0386 | val: 0.0413 | gap: +7.2% | lr: 0.000030
+Epoch 45/100 | train: 0.0387 | val: 0.0413 | gap: +6.9% | lr: 0.000029
+Epoch 46/100 | train: 0.0387 | val: 0.0419 | gap: +8.2% | lr: 0.000028
+Epoch 47/100 | train: 0.0385 | val: 0.0412 | gap: +6.9% | lr: 0.000027
+  -> saved new best checkpoint (val_loss: 0.0412)
+Epoch 48/100 | train: 0.0384 | val: 0.0412 | gap: +7.2% | lr: 0.000027
+Epoch 49/100 | train: 0.0386 | val: 0.0413 | gap: +7.0% | lr: 0.000026
+Epoch 50/100 | train: 0.0386 | val: 0.0413 | gap: +7.0% | lr: 0.000025
+Epoch 51/100 | train: 0.0385 | val: 0.0415 | gap: +7.9% | lr: 0.000024
+Epoch 52/100 | train: 0.0386 | val: 0.0411 | gap: +6.6% | lr: 0.000023
+  -> saved new best checkpoint (val_loss: 0.0411)
+Epoch 53/100 | train: 0.0384 | val: 0.0411 | gap: +7.0% | lr: 0.000023
+  -> saved new best checkpoint (val_loss: 0.0411)
+Epoch 54/100 | train: 0.0386 | val: 0.0411 | gap: +6.6% | lr: 0.000022
+Epoch 55/100 | train: 0.0385 | val: 0.0411 | gap: +7.0% | lr: 0.000021
+Epoch 56/100 | train: 0.0384 | val: 0.0413 | gap: +7.6% | lr: 0.000020
+Epoch 57/100 | train: 0.0385 | val: 0.0410 | gap: +6.6% | lr: 0.000020
+  -> saved new best checkpoint (val_loss: 0.0410)
+Epoch 58/100 | train: 0.0385 | val: 0.0412 | gap: +7.0% | lr: 0.000019
+Epoch 59/100 | train: 0.0384 | val: 0.0411 | gap: +7.1% | lr: 0.000018
+Epoch 60/100 | train: 0.0385 | val: 0.0410 | gap: +6.6% | lr: 0.000017
+  -> saved new best checkpoint (val_loss: 0.0410)
+Epoch 61/100 | train: 0.0383 | val: 0.0415 | gap: +8.3% | lr: 0.000017
+Epoch 62/100 | train: 0.0384 | val: 0.0411 | gap: +7.0% | lr: 0.000016
+Epoch 63/100 | train: 0.0383 | val: 0.0411 | gap: +7.2% | lr: 0.000015
+Epoch 64/100 | train: 0.0385 | val: 0.0411 | gap: +6.8% | lr: 0.000014
+Epoch 65/100 | train: 0.0383 | val: 0.0410 | gap: +7.0% | lr: 0.000014
+  -> saved new best checkpoint (val_loss: 0.0410)
+Epoch 66/100 | train: 0.0383 | val: 0.0411 | gap: +7.2% | lr: 0.000013
+Epoch 67/100 | train: 0.0386 | val: 0.0409 | gap: +5.9% | lr: 0.000012
+  -> saved new best checkpoint (val_loss: 0.0409)
+Epoch 68/100 | train: 0.0382 | val: 0.0409 | gap: +7.2% | lr: 0.000012
+Epoch 69/100 | train: 0.0384 | val: 0.0409 | gap: +6.6% | lr: 0.000011
+  -> saved new best checkpoint (val_loss: 0.0409)
+Epoch 70/100 | train: 0.0382 | val: 0.0410 | gap: +7.4% | lr: 0.000010
+Epoch 71/100 | train: 0.0383 | val: 0.0409 | gap: +6.9% | lr: 0.000010
+Epoch 72/100 | train: 0.0382 | val: 0.0409 | gap: +6.9% | lr: 0.000009
+  -> saved new best checkpoint (val_loss: 0.0409)
+Epoch 73/100 | train: 0.0382 | val: 0.0409 | gap: +7.1% | lr: 0.000008
+Epoch 74/100 | train: 0.0382 | val: 0.0409 | gap: +6.8% | lr: 0.000008
+  -> saved new best checkpoint (val_loss: 0.0409)
+Epoch 75/100 | train: 0.0381 | val: 0.0409 | gap: +7.4% | lr: 0.000007
+Epoch 76/100 | train: 0.0383 | val: 0.0408 | gap: +6.8% | lr: 0.000007
+  -> saved new best checkpoint (val_loss: 0.0408)
+Epoch 77/100 | train: 0.0382 | val: 0.0408 | gap: +7.0% | lr: 0.000006
+  -> saved new best checkpoint (val_loss: 0.0408)
+Epoch 78/100 | train: 0.0381 | val: 0.0409 | gap: +7.3% | lr: 0.000006
+Epoch 79/100 | train: 0.0382 | val: 0.0409 | gap: +7.2% | lr: 0.000005
+Epoch 80/100 | train: 0.0380 | val: 0.0408 | gap: +7.3% | lr: 0.000005
+Epoch 81/100 | train: 0.0381 | val: 0.0408 | gap: +7.3% | lr: 0.000004
+Epoch 82/100 | train: 0.0380 | val: 0.0408 | gap: +7.4% | lr: 0.000004
+Epoch 83/100 | train: 0.0380 | val: 0.0408 | gap: +7.4% | lr: 0.000003
+Epoch 84/100 | train: 0.0382 | val: 0.0408 | gap: +6.9% | lr: 0.000003
+
+Stopping early at epoch 84: No val_loss improvement for 7 epochs (best: 0.0408)
+Best checkpoint retained at checkpoints/best_model_phase2.pt (val_loss: 0.0408)
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> dir .\checkpoints\
+
+
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> python -m src.eval.evaluate                                                                        
+Test set results (163 patches):
+  PSNR: 37.0600
+  SSIM: 0.8690
+  SAM: 3.1637
+  ERGAS: 3.9710

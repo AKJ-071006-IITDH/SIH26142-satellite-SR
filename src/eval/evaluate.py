@@ -6,7 +6,7 @@ from src.data.dataset import SatelliteSRDataset
 from src.eval.metrics import evaluate_batch
 from torch.utils.data import DataLoader, Subset
 
-def run_evaluation(checkpoint_path="checkpoints/best_model.pt", split="test"):
+def run_evaluation(checkpoint_path="checkpoints/best_model_phase2.pt", split="test"):
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     ckpt = torch.load(checkpoint_path, map_location=device)

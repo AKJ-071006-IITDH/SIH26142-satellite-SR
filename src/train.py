@@ -6,6 +6,7 @@ size discussed for this hackathon.
 """
 
 import torch
+import torch.nn as nn
 from torch.utils.data import DataLoader
 import json
 from pathlib import Path
@@ -95,6 +96,17 @@ class EarlyStopper:
 
         return False, None
 
+class SelfFeatureExtractor(nn.Module):
+    def __init__(self, pretrained_model):
+        super().__init__()
+        self.features = nn.Sequential(
+            pretrained_model.conv_first,
+            *list(pretrained_model.rrdb_blocks.children())[:3]
+        )
+
+    def forward(self, x):
+        return self.features(x)
+
 
 def train(num_epochs=100, lr=2e-4, batch_size=8, checkpoint_dir="checkpoints",
           num_blocks=6, patience=7, overfit_gap_threshold=0.15):
@@ -115,9 +127,31 @@ def train(num_epochs=100, lr=2e-4, batch_size=8, checkpoint_dir="checkpoints",
     train_loader, val_loader = get_dataloaders(batch_size)
     print(f"Train batches: {len(train_loader)} | Val batches: {len(val_loader)}")
 
+    # 1. Load the checkpoint from Phase 1
+    checkpoint_path = f"{checkpoint_dir}/best_model.pt"
+    checkpoint = torch.load(checkpoint_path, map_location=device)
+    saved_num_blocks = checkpoint["num_blocks"]
+
+    # 2. Setup the FROZEN feature extractor
+    frozen_base_model = RRDBNet(in_channels=4, out_channels=4, num_blocks=saved_num_blocks, scale_factor=4).to(device)
+    frozen_base_model.load_state_dict(checkpoint["model_state_dict"])
+    feature_extractor = SelfFeatureExtractor(frozen_base_model).to(device)
+    feature_extractor.eval() 
+
+    # 3. Setup your ACTIVE training model 
     model = RRDBNet(in_channels=4, out_channels=4, num_blocks=num_blocks, scale_factor=4).to(device)
-    criterion = CombinedSRLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr, betas=(0.9, 0.999))
+    model.load_state_dict(checkpoint["model_state_dict"])
+
+    # 4. Wire in the perceptual loss and adjust weights
+    criterion = CombinedSRLoss(
+        feature_extractor=feature_extractor, 
+        w_pixel=0.8,       
+        w_perceptual=0.5,  
+        w_spectral=0.5     
+    )
+    
+    # 5. Lower the learning rate for fine-tuning
+    optimizer = torch.optim.Adam(model.parameters(), lr=5e-5, betas=(0.9, 0.999))
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=num_epochs)
     scaler = torch.cuda.amp.GradScaler()   # mixed precision, per the 6GB VRAM tuning
 
@@ -179,7 +213,7 @@ def train(num_epochs=100, lr=2e-4, batch_size=8, checkpoint_dir="checkpoints",
                 "optimizer_state_dict": optimizer.state_dict(),
                 "val_loss": val_loss,
                 "num_blocks": num_blocks,
-            }, f"{checkpoint_dir}/best_model.pt")
+            }, f"{checkpoint_dir}/best_model_phase2.pt")
             print(f"  -> saved new best checkpoint (val_loss: {val_loss:.4f})")
 
         torch.save(model.state_dict(), f"{checkpoint_dir}/latest_model.pt")
@@ -188,14 +222,14 @@ def train(num_epochs=100, lr=2e-4, batch_size=8, checkpoint_dir="checkpoints",
         should_stop, reason = early_stopper.check(epoch, train_loss, val_loss)
         if should_stop:
             print(f"\nStopping early at epoch {epoch+1}: {reason}")
-            print(f"Best checkpoint retained at checkpoints/best_model.pt "
+            print(f"Best checkpoint retained at checkpoints/best_model_phase2.pt "
                   f"(val_loss: {best_val_loss:.4f})")
             break
     else:
         print(f"\nCompleted all {num_epochs} epochs without triggering early stopping.")
 
     # Save training history for plotting later (e.g. in your presentation)
-    with open(f"{checkpoint_dir}/training_history.json", "w") as f:
+    with open(f"{checkpoint_dir}/training_history_phase2.json", "w") as f:
         json.dump(history, f)
 
     return history

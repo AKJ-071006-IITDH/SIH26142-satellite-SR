@@ -99,5 +99,3 @@ class CombinedSRLoss(nn.Module):
         if self.perceptual_loss is not None:
             loss = loss + self.w_perceptual * self.perceptual_loss(pred, target)
         return loss
-
-
