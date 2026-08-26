@@ -1,0 +1,35 @@
+# --- Module 2: Copernicus data fetching ---
+sentinelhub>=3.10.0
+rasterio>=1.3.0
+
+# --- Core numerical / scientific stack (Modules 2-8) ---
+numpy>=1.26.0
+scipy>=1.11.0
+
+# --- Module 4-6: model + training ---
+# NOTE: torch/torchvision below are the CPU-default versions from PyPI.
+# For your RTX 4050 (6GB), install the CUDA build INSTEAD by running the
+# command below (not this file) BEFORE running `pip install -r requirements.txt`,
+# so pip doesn't overwrite it with the CPU-only build:
+#
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#
+# Check your installed CUDA version first with `nvidia-smi` (top right of
+# the output) and match the cu1xx tag accordingly — cu121 works for most
+# current driver versions as of 2026, but verify against
+# https://pytorch.org/get-started/locally/ if `torch.cuda.is_available()`
+# returns False after install.
+torch>=2.2.0
+torchvision>=0.17.0
+
+# --- Module 7: evaluation metrics ---
+scikit-image>=0.22.0
+
+# --- Module 9: demo interface ---
+streamlit>=1.32.0
+matplotlib>=3.8.0
+
+# --- General utilities ---
+tqdm>=4.66.0          # progress bars for training loops and data fetching loops
+pyyaml>=6.0            # for configs/config.yaml (paths, hyperparameters)
+pillow>=10.0.0         # image I/O support, used internally by several libs above
