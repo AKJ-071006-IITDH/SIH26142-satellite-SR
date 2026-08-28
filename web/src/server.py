@@ -153,37 +153,68 @@ async def run_super_resolution(
         raise HTTPException(status_code=400, detail=str(e))
 
     tile_name = "Custom Upload"
+    has_file = file is not None and getattr(file, "filename", None) and file.filename.strip() != ""
 
-    if file is not None:
+    if has_file:
         contents = await file.read()
-        pil_img = Image.open(io.BytesIO(contents)).convert("RGB")
-        img_np = np.array(pil_img).astype(np.float32) / 255.0
-        h, w, c = img_np.shape
-        # Synthesize a pseudo-NIR band for arbitrary RGB uploads -- see
-        # the note in the README this endpoint's docstring-equivalent:
-        # this is an approximation for demo purposes on non-satellite
-        # uploads, NOT a substitute for real NIR sensor data.
-        nir = np.clip(img_np[:, :, 1] * 1.2 + img_np[:, :, 0] * 0.3, 0.0, 1.0)
-        hr_np = np.dstack([img_np, nir])
+        if not contents:
+            raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+        
+        filename = file.filename.lower()
         tile_name = file.filename or "Uploaded Image"
-    elif tile_id is not None:
+        
+        if filename.endswith(".npy"):
+            try:
+                arr = np.load(io.BytesIO(contents))
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"Invalid .npy file: {e}")
+            
+            if arr.ndim == 2:
+                arr = np.stack([arr] * 4, axis=-1)
+            elif arr.ndim == 3:
+                if arr.shape[0] in [3, 4] and arr.shape[2] not in [3, 4]:
+                    arr = np.transpose(arr, (1, 2, 0))
+                if arr.shape[-1] == 3:
+                    nir = np.clip(arr[:, :, 1] * 1.2 + arr[:, :, 0] * 0.3, 0.0, 1.0)
+                    arr = np.dstack([arr, nir])
+                elif arr.shape[-1] > 4:
+                    arr = arr[:, :, :4]
+            hr_np = arr.astype(np.float32)
+            if hr_np.max() > 1.0:
+                if hr_np.max() <= 255.0:
+                    hr_np /= 255.0
+                else:
+                    hr_np /= hr_np.max()
+        else:
+            try:
+                pil_img = Image.open(io.BytesIO(contents)).convert("RGB")
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"Cannot decode image: {e}")
+            img_np = np.array(pil_img).astype(np.float32) / 255.0
+            # Synthesize pseudo-NIR for RGB upload
+            nir = np.clip(img_np[:, :, 1] * 1.2 + img_np[:, :, 0] * 0.3, 0.0, 1.0)
+            hr_np = np.dstack([img_np, nir])
+    elif tile_id is not None and tile_id.strip() != "":
         tile_path = f"data/raw_tiles/{tile_id}.npy"
         if not os.path.exists(tile_path):
             raise HTTPException(status_code=404, detail="Sample tile not found")
-        hr_np = np.load(tile_path)
+        hr_np = np.load(tile_path).astype(np.float32)
         tile_name = tile_id.replace("_", " ").title()
     else:
         raise HTTPException(status_code=400, detail="Must provide tile_id or file upload")
 
-    # The uploaded/selected image is treated as the GROUND TRUTH.
-    # We synthetically degrade it to produce the "medium-res" input --
-    # this is the same approach used throughout training (Module 3's
-    # degrade() function) and is the only honest way to show a genuine
-    # LR/SR/GT comparison from an arbitrary upload, since no real
-    # lower-resolution sensor capture of that exact scene exists.
-    h, w, _ = hr_np.shape
-    crop_h, crop_w = min(h, 128), min(w, 128)
-    hr_crop = hr_np[:crop_h, :crop_w, :4]
+    # Ensure dimensions are multiples of 4 to prevent downsample/upsample mismatch
+    h, w = hr_np.shape[:2]
+    crop_h = max(32, (min(h, 128) // 4) * 4)
+    crop_w = max(32, (min(w, 128) // 4) * 4)
+
+    if h < crop_h or w < crop_w:
+        pil_res = Image.fromarray(np.clip(hr_np[:, :, :3] * 255.0, 0, 255).astype(np.uint8)).resize((crop_w, crop_h), Image.Resampling.BICUBIC)
+        img_np = np.array(pil_res).astype(np.float32) / 255.0
+        nir = np.clip(img_np[:, :, 1] * 1.2 + img_np[:, :, 0] * 0.3, 0.0, 1.0)
+        hr_crop = np.dstack([img_np, nir])
+    else:
+        hr_crop = hr_np[:crop_h, :crop_w, :4]
 
     lr_np = degrade(hr_crop, scale_factor=4)
     lr_tensor = torch.from_numpy(lr_np).permute(2, 0, 1).unsqueeze(0).float().to(device)

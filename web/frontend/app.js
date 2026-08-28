@@ -7,7 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const presetSelect = document.getElementById('preset-select');
   const dropzone = document.getElementById('dropzone');
   const fileInput = document.getElementById('file-input');
-  const fileNameDisplay = document.getElementById('file-name');
+  const selectedFileCard = document.getElementById('selected-file-card');
+  const selectedFileName = document.getElementById('selected-file-name');
+  const selectedFileSize = document.getElementById('selected-file-size');
+  const selectedFileThumb = document.getElementById('selected-file-thumb');
+  const selectedFileIcon = document.getElementById('selected-file-icon');
+  const changeFileBtn = document.getElementById('change-file-btn');
+  const removeFileBtn = document.getElementById('remove-file-btn');
   const mcSamplesInput = document.getElementById('mc-samples');
   const mcValDisplay = document.getElementById('mc-val');
   const runBtn = document.getElementById('run-btn');
@@ -69,14 +75,19 @@ document.addEventListener('DOMContentLoaded', () => {
   function showResults() {
     uploadHero.classList.add('hidden');
     dropzone.classList.add('hidden');
-    fileNameDisplay.classList.add('hidden');
+    selectedFileCard.classList.add('hidden');
     resultsSection.classList.remove('hidden');
   }
 
   function showUploadForm() {
     uploadHero.classList.remove('hidden');
-    dropzone.classList.remove('hidden');
-    fileNameDisplay.classList.remove('hidden');
+    if (selectedFile) {
+      dropzone.classList.add('hidden');
+      selectedFileCard.classList.remove('hidden');
+    } else {
+      dropzone.classList.remove('hidden');
+      selectedFileCard.classList.add('hidden');
+    }
     resultsSection.classList.add('hidden');
   }
 
@@ -144,12 +155,74 @@ document.addEventListener('DOMContentLoaded', () => {
     mcValDisplay.textContent = e.target.value;
   });
 
-  dropzone.addEventListener('click', () => fileInput.click());
+  function formatBytes(bytes) {
+    if (!bytes || bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
+  function handleFileSelected(file) {
+    if (!file) {
+      clearFileSelection();
+      return;
+    }
+    selectedFile = file;
+    presetSelect.value = '';
+
+    selectedFileName.textContent = file.name;
+    selectedFileSize.textContent = formatBytes(file.size);
+
+    if (file.type && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        selectedFileThumb.src = e.target.result;
+        selectedFileThumb.classList.remove('hidden');
+        selectedFileIcon.classList.add('hidden');
+      };
+      reader.readAsDataURL(file);
+    } else {
+      selectedFileThumb.src = '';
+      selectedFileThumb.classList.add('hidden');
+      selectedFileIcon.classList.remove('hidden');
+      selectedFileIcon.textContent = file.name.endsWith('.npy') ? '📊' : '🛰️';
+    }
+
+    dropzone.classList.add('hidden');
+    selectedFileCard.classList.remove('hidden');
+  }
+
+  function clearFileSelection() {
+    selectedFile = null;
+    fileInput.value = '';
+    selectedFileThumb.src = '';
+    selectedFileThumb.classList.add('hidden');
+    selectedFileIcon.classList.remove('hidden');
+    selectedFileCard.classList.add('hidden');
+    dropzone.classList.remove('hidden');
+  }
+
+  dropzone.addEventListener('click', (e) => {
+    if (e.target !== fileInput) {
+      fileInput.click();
+    }
+  });
+  fileInput.addEventListener('click', (e) => e.stopPropagation());
+
+  changeFileBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    fileInput.click();
+  });
+
+  removeFileBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    clearFileSelection();
+  });
+
   fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length > 0) {
-      selectedFile = e.target.files[0];
-      fileNameDisplay.textContent = `Selected: ${selectedFile.name}`;
-      presetSelect.value = '';
+    if (e.target.files && e.target.files.length > 0) {
+      handleFileSelected(e.target.files[0]);
     }
   });
 
@@ -163,19 +236,20 @@ document.addEventListener('DOMContentLoaded', () => {
   dropzone.addEventListener('drop', (e) => {
     e.preventDefault();
     dropzone.classList.remove('dragover');
-    if (e.dataTransfer.files.length > 0) {
-      selectedFile = e.dataTransfer.files[0];
-      fileInput.files = e.dataTransfer.files;
-      fileNameDisplay.textContent = `Selected: ${selectedFile.name}`;
-      presetSelect.value = '';
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      try {
+        fileInput.files = e.dataTransfer.files;
+      } catch (err) {
+        // Fallback for browsers
+      }
+      handleFileSelected(file);
     }
   });
 
   presetSelect.addEventListener('change', () => {
     if (presetSelect.value) {
-      selectedFile = null;
-      fileInput.value = '';
-      fileNameDisplay.textContent = '';
+      clearFileSelection();
     }
   });
 
