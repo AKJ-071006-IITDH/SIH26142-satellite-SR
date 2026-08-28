@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SIH26142 — Super Resolution Mapping Platform</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=1.2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -86,7 +86,7 @@
           </div>
 
           <div class="setting-item">
-            <label for="preset-select">Preset Region</label>
+            <label for="preset-select">Demo Region</label>
             <select id="preset-select" class="form-control">
               <option value="">-- Or pick a preset --</option>
             </select>
@@ -110,7 +110,7 @@
         </div>
       </div>
 
-      <!-- Big centered dropzone -->
+      <!-- Big centered dropzone (visible when no file is selected) -->
       <div id="dropzone" class="dropzone-hero">
         <input type="file" id="file-input" accept="image/*,.npy" hidden>
         <div class="dropzone-hero-inner">
@@ -128,7 +128,38 @@
           <span class="dropzone-hero-hint">PNG, JPG, NPY up to 25 MB</span>
         </div>
       </div>
-      <div id="file-name" class="file-name-display"></div>
+
+      <!-- Selected File Card (shown when file is selected, replaces dropzone) -->
+      <div id="selected-file-card" class="selected-file-card hidden">
+        <div class="selected-file-main">
+          <div class="selected-file-preview-wrap">
+            <div class="selected-file-icon" id="selected-file-icon">🛰️</div>
+            <img id="selected-file-thumb" class="selected-file-thumb hidden" alt="preview">
+          </div>
+          <div class="selected-file-meta">
+            <div class="selected-file-name" id="selected-file-name">filename.png</div>
+            <div class="selected-file-sub">
+              <span id="selected-file-size" class="selected-file-size">0 KB</span>
+              <span class="dot-separator">•</span>
+              <span class="selected-file-status">✓ Ready for analysis</span>
+            </div>
+          </div>
+        </div>
+        <div class="selected-file-actions">
+          <button type="button" id="change-file-btn" class="btn btn-outline btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            Change Image
+          </button>
+          <button type="button" id="remove-file-btn" class="btn-icon-remove" title="Remove image">
+            ✕
+          </button>
+        </div>
+      </div>
 
 
       <!-- ---- RESULTS SECTION (hidden until run) ---- -->
@@ -224,7 +255,7 @@
     </footer>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=1.2"></script>
 </body>
 
 </html>
