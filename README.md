@@ -4,6 +4,14 @@ This repository contains the end-to-end deep learning pipeline for super-resolut
 
 The core training code lives in the project root and the deployable web app lives under `WEB/WEB`.
 
+## Model status
+
+- Current best-performing model: Phase 1
+- Public repository status: Phase 1 is the default model represented in the checked-in code and checkpoint setup
+- Experimental stages: Phase 2, Phase 3, and Phase 5 are additional research/benchmarking experiments and not the default stable model path for this repo
+
+> Important: The code currently published in this GitHub repository reflects the best-performing model in the project at this stage: the Phase 1 model. This means the training and inference implementation in the main branch is tuned around the Phase 1 checkpoint and configuration, while Phase 2, Phase 3, and Phase 5 remain as additional experimental/model-development stages for benchmarking and research.
+
 ## Overview
 
 The system is designed to map medium-resolution satellite inputs (for example, 30m/40m bands) to a sharper 10m output using a custom RRDB-based generator. It is trained on 4-band imagery: Red, Green, Blue, and NIR, and includes uncertainty estimation via Monte Carlo dropout.
@@ -32,24 +40,24 @@ The project uses a residual-dense generator architecture based on ESRGAN/RRDBNet
 
 ### Model variants used in this project
 
-#### Phase 2 - Refined Baseline
+#### Phase 1 - Refined Baseline
 - 6-block RRDBNet
 - Best measured image quality in the project
 - Good for reliable, stable super-resolution output
 
-#### Phase 3 - High-Capacity Model
+#### Phase 2 - High-Capacity Model
 - 12-block RRDBNet
 - Higher capacity for fine spatial detail
-- Stronger detail potential, but not always better metrics than Phase 2
+- Stronger detail potential, but not always better metrics than Phase 1
 
-#### Phase 4 - Adversarial Refinement
-- Warm-started from Phase 3
+#### Phase 3 - Adversarial Refinement
+- Warm-started from Phase 2
 - Uses a PatchGAN discriminator for sharper texture and more realistic local detail
 - Good for visual fidelity refinement
 
 #### Phase 5 - Weight Interpolation Blend
-- Combines Phase 3 and Phase 4 weights
-- Intended to keep the strong structure of Phase 3 and the sharpness of Phase 4
+- Combines Phase 2 and Phase 3 weights
+- Intended to keep the strong structure of Phase 2 and the sharpness of Phase 3
 - Used as the final blended checkpoint when desired
 
 ### Loss functions used during training
@@ -57,7 +65,7 @@ The project uses a residual-dense generator architecture based on ESRGAN/RRDBNet
 - Charbonnier pixel loss: robust, smooth L1-like reconstruction loss
 - Spectral consistency loss: compares NDVI between prediction and target
 - Perceptual loss: can use VGG-based feature matching or self-feature matching
-- Adversarial GAN objective: used in Phase 4 to enhance realism
+- Adversarial GAN objective: used in Phase 3 to enhance realism
 
 ### Uncertainty estimation
 
