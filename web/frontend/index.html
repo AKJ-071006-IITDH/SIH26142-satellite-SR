@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIH26142 — Super Resolution Mapping Platform</title>
+  <link rel="stylesheet" href="styles.css?v=1.2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div class="app-container">
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo-icon">🛰️</div>
+        <div>
+          <h1>Super Resolution Mapping Studio</h1>
+          <span class="sub-badge">SIH26142 | NTRO Satellite Enhancer</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="status-indicator">
+          <span class="status-dot online"></span>
+          <span id="gpu-status">GPU Acceleration: Active</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== TAB BAR ===== -->
+    <nav class="tab-bar" id="tab-bar">
+      <button class="tab-btn active" data-tab="analyze" id="tab-btn-analyze">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="17 8 12 3 7 8" />
+          <line x1="12" y1="3" x2="12" y2="15" />
+        </svg>
+        Analyze
+      </button>
+      <button class="tab-btn" data-tab="history" id="tab-btn-history">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+        History
+        <span id="history-badge" class="badge">0</span>
+      </button>
+    </nav>
+
+    <!-- ====================================================
+         TAB: ANALYZE
+         ==================================================== -->
+    <div class="tab-pane active" id="pane-analyze">
+
+      <!-- ---- UPLOAD HERO (visible before results) ---- -->
+      <div id="upload-hero" class="upload-hero">
+        <div class="hero-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 8v8" />
+            <path d="M8 12h8" />
+          </svg>
+          Super-Resolution Enhancement Model
+        </div>
+
+        <h2 class="hero-title">Analyze a Satellite Image</h2>
+        <p class="hero-subtitle">
+          Upload a satellite or aerial photo. The model enhances resolution using RRDBNet with
+          MC-Dropout uncertainty — vegetation, water, built-up areas, soil, and clouds —
+          and saves the result to your history for comparison.
+        </p>
+        <!-- Compact settings row -->
+        <div class="settings-row" id="settings-row">
+          <div class="setting-item">
+            <label for="model-select">Model</label>
+            <select id="model-select" class="form-control"></select>
+          </div>
+
+          <div class="setting-item">
+            <label for="preset-select">Demo Region</label>
+            <select id="preset-select" class="form-control">
+              <option value="">-- Or pick a preset --</option>
+            </select>
+          </div>
+
+          <div class="setting-item">
+            <label for="mc-samples">MC-Dropout: <span id="mc-val">12</span></label>
+            <input type="range" id="mc-samples" min="5" max="30" value="12" step="1" class="slider">
+            <div class="slider-labels">
+              <span>5</span>
+              <span>12</span>
+              <span>30</span>
+            </div>
+          </div>
+
+          <div class="setting-item setting-action">
+            <button id="run-btn" class="btn btn-primary btn-run">
+              Run Super-Resolution
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Big centered dropzone (visible when no file is selected) -->
+      <div id="dropzone" class="dropzone-hero">
+        <input type="file" id="file-input" accept="image/*,.npy" hidden>
+        <div class="dropzone-hero-inner">
+          <div class="dropzone-icon-wrap">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="12" y1="18" x2="12" y2="12" />
+              <polyline points="9 15 12 12 15 15" />
+            </svg>
+          </div>
+          <p class="dropzone-hero-text">Drop a satellite image here or <span class="browse-link">click to browse</span>
+          </p>
+          <span class="dropzone-hero-hint">PNG, JPG, NPY up to 25 MB</span>
+        </div>
+      </div>
+
+      <!-- Selected File Card (shown when file is selected, replaces dropzone) -->
+      <div id="selected-file-card" class="selected-file-card hidden">
+        <div class="selected-file-main">
+          <div class="selected-file-preview-wrap">
+            <div class="selected-file-icon" id="selected-file-icon">🛰️</div>
+            <img id="selected-file-thumb" class="selected-file-thumb hidden" alt="preview">
+          </div>
+          <div class="selected-file-meta">
+            <div class="selected-file-name" id="selected-file-name">filename.png</div>
+            <div class="selected-file-sub">
+              <span id="selected-file-size" class="selected-file-size">0 KB</span>
+              <span class="dot-separator">•</span>
+              <span class="selected-file-status">✓ Ready for analysis</span>
+            </div>
+          </div>
+        </div>
+        <div class="selected-file-actions">
+          <button type="button" id="change-file-btn" class="btn btn-outline btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            Change Image
+          </button>
+          <button type="button" id="remove-file-btn" class="btn-icon-remove" title="Remove image">
+            ✕
+          </button>
+        </div>
+      </div>
+
+
+      <!-- ---- RESULTS SECTION (hidden until run) ---- -->
+      <div id="results-section" class="results-section hidden">
+
+        <!-- Back / New Analysis button -->
+        <div class="results-topbar">
+          <button id="new-analysis-btn" class="btn btn-outline btn-sm">
+            ← New Analysis
+          </button>
+          <div id="current-region-label" class="region-label">Region: —</div>
+        </div>
+
+        <!-- Image Comparison -->
+        <section class="viewer-section card">
+          <div class="viewer-header">
+            <div class="view-modes">
+              <button class="mode-btn active" data-mode="sr">Super-Resolved (RGB)</button>
+              <button class="mode-btn" data-mode="uncertainty">Uncertainty 🔥</button>
+              <button class="mode-btn" data-mode="ndvi">NDVI 🍃</button>
+            </div>
+          </div>
+
+          <div class="image-studio">
+            <div id="triptych-container" class="triptych-container">
+              <div class="triptych-panel">
+                <span class="image-tag">Medium-Res Input</span>
+                <img id="img-lr" class="triptych-img" src="" alt="Low Res Input">
+              </div>
+              <div class="triptych-panel">
+                <span class="image-tag" id="sr-panel-tag">Model Output</span>
+                <img id="img-sr" class="triptych-img" src="" alt="Super Resolved Output">
+              </div>
+              <div class="triptych-panel">
+                <span class="image-tag">Ground Truth</span>
+                <img id="img-gt" class="triptych-img" src="" alt="Ground Truth">
+              </div>
+            </div>
+
+            <div id="loading-overlay" class="loading-overlay hidden">
+              <div class="spinner"></div>
+              <p id="loading-text">Running RRDBNet + MC-Dropout Uncertainty Analysis...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Metrics -->
+        <div class="metrics-strip">
+          <div id="active-model-badge" class="active-model-badge">—</div>
+          <div class="metrics-grid-inline">
+            <div class="metric-card">
+              <span class="metric-label">PSNR</span>
+              <span id="metric-psnr" class="metric-value">--</span>
+              <span class="metric-unit">dB</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">SSIM</span>
+              <span id="metric-ssim" class="metric-value">--</span>
+              <span class="metric-unit">Score</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">SAM</span>
+              <span id="metric-sam" class="metric-value">--</span>
+              <span class="metric-unit">Degrees °</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">ERGAS</span>
+              <span id="metric-ergas" class="metric-value">--</span>
+              <span class="metric-unit">Index</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================
+         TAB: HISTORY
+         ==================================================== -->
+    <div class="tab-pane" id="pane-history">
+      <div class="history-page card">
+        <div class="history-page-header">
+          <h2 class="section-title">📜History</h2>
+          <button id="clear-history-btn" class="btn btn-danger btn-sm">Clear All History</button>
+        </div>
+        <div id="history-list" class="history-grid">
+          <p class="empty-msg">No past runs saved yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>SIH26142 — Super Resolution Mapping Platform | NTRO Hardware-Accelerated Deep Learning Pipeline</p>
+    </footer>
+  </div>
+
+  <script src="app.js?v=1.2"></script>
+</body>
+
+</html>

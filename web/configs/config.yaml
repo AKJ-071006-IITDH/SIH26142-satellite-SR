@@ -1,0 +1,57 @@
+# SIH26142 - Super Resolution Mapping Configuration
+
+data:
+  raw_tiles_dir: "data/raw_tiles"
+  patches_dir: "data/patches"
+  splits_dir: "data/splits"
+  history_dir: "data/history"
+  patch_size: 96              # Reduced for RTX 4050 6GB VRAM safety
+  stride: 96
+  scale_factor: 4             # Resolution upscale ratio (e.g. 40m -> 10m)
+  bands: ["B04", "B03", "B02", "B08"]  # Red, Green, Blue, NIR
+
+degradation:
+  blur_sigma: 1.0
+  noise_std: 0.01
+
+# Add this block to your existing configs/config.yaml (keep everything
+# else in that file as-is -- this is a new top-level section, not a
+# replacement for the whole file).
+
+models:
+  phase2:
+    label: "Phase 2 - Refined Baseline"
+    description: "6-block RRDBNet. Best measured PSNR/SSIM/SAM/ERGAS and most color-faithful output of the three."
+    checkpoint: "checkpoints/best_model_phase2.pt"
+    num_blocks: 6
+  phase3:
+    label: "Phase 3 - High Capacity"
+    description: "12-block RRDBNet for finer spatial detail. Higher capacity, currently trails Phase 2 on measured metrics."
+    checkpoint: "checkpoints/best_model_phase3.pt"
+    num_blocks: 12
+  phase4:
+    label: "Phase 4 - Adversarial Refinement"
+    description: "12-block generator warm-started from Phase 3, refined with a PatchGAN discriminator for sharper micro-texture."
+    checkpoint: "checkpoints/best_model_phase4.pt"
+    num_blocks: 12
+
+loss:
+  w_pixel: 1.0
+  w_spectral: 0.5
+  w_perceptual: 0.1
+
+training:
+  batch_size: 4               # 6GB VRAM safe batch size
+  accumulation_steps: 4       # Simulates effective batch size 16
+  learning_rate: 0.0002
+  num_epochs: 30
+  num_workers: 2
+  use_amp: true               # Mixed precision training enabled
+
+uncertainty:
+  n_samples_train: 20
+  n_samples_demo: 12          # Sub-second web UI response time
+
+server:
+  host: "0.0.0.0"
+  port: 8000
