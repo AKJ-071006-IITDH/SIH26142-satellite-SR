@@ -1,3 +1,4 @@
+import argparse
 import os
 import json
 from pathlib import Path
@@ -8,7 +9,25 @@ from skimage.transform import resize
 from tqdm import tqdm
 
 from src.models.rrdb import RRDBNet
+from src.models.rrdbnet_attn import AttentionRRDBNet
 from src.data.dataset import SatelliteSRDataset
+
+def load_model(checkpoint_path, device):
+    """
+    Loads either architecture from a checkpoint, auto-detected from the
+    "arch" key train_v2.py/train_v2_fidelity.py save (arch="attn_rrdb").
+    Older RRDBNet checkpoints (train.py, train_phase4.py, ...) don't have
+    that key and fall back to the original architecture, same as before.
+    """
+    ckpt = torch.load(checkpoint_path, map_location=device)
+    num_blocks = ckpt.get("num_blocks", 16)
+    if ckpt.get("arch") == "attn_rrdb":
+        model = AttentionRRDBNet(in_channels=4, out_channels=4, num_blocks=num_blocks, scale_factor=4).to(device)
+    else:
+        model = RRDBNet(in_channels=4, out_channels=4, num_blocks=num_blocks, scale_factor=4).to(device)
+    model.load_state_dict(ckpt["model_state_dict"] if "model_state_dict" in ckpt else ckpt)
+    model.eval()
+    return model
 
 def to_uint8_rgb(img_chw: np.ndarray) -> np.ndarray:
     """Takes first 3 channels (RGB) and applies percentile stretch for viewing."""
@@ -27,13 +46,9 @@ def resize_for_display(lr_chw: np.ndarray, target_hw) -> np.ndarray:
 
 def visualize_all(checkpoint_path="checkpoints/best_model_phase2.pt", split="test", out_dir="demo/full_test_set"):
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    
+
     # 1. Setup Model
-    ckpt = torch.load(checkpoint_path, map_location=device)
-    num_blocks = ckpt.get("num_blocks", 16)
-    model = RRDBNet(in_channels=4, out_channels=4, num_blocks=num_blocks, scale_factor=4).to(device)
-    model.load_state_dict(ckpt["model_state_dict"] if "model_state_dict" in ckpt else ckpt)
-    model.eval()
+    model = load_model(checkpoint_path, device)
 
     # 2. Setup Dataset
     dataset = SatelliteSRDataset(augment=False)
@@ -82,4 +97,9 @@ def visualize_all(checkpoint_path="checkpoints/best_model_phase2.pt", split="tes
             plt.close(fig)
 
 if __name__ == "__main__":
-    visualize_all()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--checkpoint", default="checkpoints/best_model_phase2.pt")
+    parser.add_argument("--split", default="test")
+    parser.add_argument("--out_dir", default="demo/full_test_set")
+    args = parser.parse_args()
+    visualize_all(checkpoint_path=args.checkpoint, split=args.split, out_dir=args.out_dir)

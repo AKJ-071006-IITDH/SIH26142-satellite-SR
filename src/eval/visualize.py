@@ -23,8 +23,27 @@ import matplotlib.pyplot as plt
 from skimage.transform import resize
 
 from src.models.rrdb import RRDBNet
+from src.models.rrdbnet_attn import AttentionRRDBNet
 from src.data.dataset import SatelliteSRDataset
 from src.eval.metrics import compute_psnr, compute_ssim
+
+
+def load_model(checkpoint_path, device):
+    """
+    Loads either architecture from a checkpoint, auto-detected from the
+    "arch" key train_v2.py/train_v2_fidelity.py save (arch="attn_rrdb").
+    Older RRDBNet checkpoints (train.py, train_phase4.py, ...) don't have
+    that key and fall back to the original architecture, same as before.
+    """
+    ckpt = torch.load(checkpoint_path, map_location=device)
+    num_blocks = ckpt.get("num_blocks", 16)
+    if ckpt.get("arch") == "attn_rrdb":
+        model = AttentionRRDBNet(in_channels=4, out_channels=4, num_blocks=num_blocks, scale_factor=4).to(device)
+    else:
+        model = RRDBNet(in_channels=4, out_channels=4, num_blocks=num_blocks, scale_factor=4).to(device)
+    model.load_state_dict(ckpt["model_state_dict"] if "model_state_dict" in ckpt else ckpt)
+    model.eval()
+    return model
 
 
 def to_uint8_rgb(img_chw: np.ndarray) -> np.ndarray:
@@ -57,14 +76,7 @@ def bicubic_baseline(lr_chw: np.ndarray, target_hw) -> np.ndarray:
 def visualize(checkpoint_path="checkpoints/best_model_phase2.pt", split="test",
               num_samples=6, out_path="demo/visual_eval_phase2.png", seed=0):
     device = "cuda" if torch.cuda.is_available() else "cpu"
-
-    ckpt = torch.load(checkpoint_path, map_location=device)
-    num_blocks = ckpt.get("num_blocks", 16)   # match evaluate.py's fix -- read
-                                                # the actual trained architecture,
-                                                # don't hardcode a guess
-    model = RRDBNet(in_channels=4, out_channels=4, num_blocks=num_blocks, scale_factor=4).to(device)
-    model.load_state_dict(ckpt["model_state_dict"] if "model_state_dict" in ckpt else ckpt)
-    model.eval()
+    model = load_model(checkpoint_path, device)
 
     dataset = SatelliteSRDataset(augment=False)   # no augmentation for evaluation,
                                                      # same reasoning as evaluate.py

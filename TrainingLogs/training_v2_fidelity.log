@@ -1,0 +1,70 @@
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> python -m src.train_v2_fidelity
+Training AttentionRRDBNet [fidelity-weighted] on: cuda
+  loss weights: pixel=1.0 ssim=0.2 spectral=0.2 perceptual=0.3 | dropout_rate=0.05
+Train batches: 307 | Val batches: 62
+Perceptual features from checkpoints/best_model.pt (num_blocks=6, val_loss=0.0418)
+AMP dtype: torch.bfloat16 (GradScaler off -- not needed for bf16)
+Epoch 1/100 | train: 0.0697 | val: 0.0636 | gap: -8.7% | lr: 0.000100                                                                                                     
+  -> saved new best checkpoint (val_loss: 0.0636)
+Epoch 2/100 | train: 0.0646 | val: 0.0584 | gap: -9.6% | lr: 0.000100                                                                                                     
+  -> saved new best checkpoint (val_loss: 0.0584)
+Epoch 3/100 | train: 0.0581 | val: 0.0550 | gap: -5.3% | lr: 0.000100                                                                                                     
+  -> saved new best checkpoint (val_loss: 0.0550)
+Epoch 4/100 | train: 0.0548 | val: 0.0516 | gap: -5.8% | lr: 0.000100                                                                                                     
+  -> saved new best checkpoint (val_loss: 0.0516)
+Epoch 5/100 | train: 0.0520 | val: 0.0486 | gap: -6.4% | lr: 0.000099                                                                                                     
+  -> saved new best checkpoint (val_loss: 0.0486)
+Epoch 6/100 | train: 0.0497 | val: 0.0487 | gap: -2.1% | lr: 0.000099                                                                                                     
+Epoch 7/100 | train: 0.0493 | val: 0.0472 | gap: -4.3% | lr: 0.000099                                                                                                     
+  -> saved new best checkpoint (val_loss: 0.0472)
+Epoch 8/100 | train: 0.0488 | val: 0.0470 | gap: -3.6% | lr: 0.000098                                                                                                     
+  -> saved new best checkpoint (val_loss: 0.0470)
+Epoch 9/100 | train: 0.0485 | val: 0.0467 | gap: -3.8% | lr: 0.000098                                                                                                     
+  -> saved new best checkpoint (val_loss: 0.0467)
+Epoch 10/100 | train: 0.0484 | val: 0.0465 | gap: -3.9% | lr: 0.000098                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0465)
+Epoch 11/100 | train: 0.0486 | val: 0.0481 | gap: -1.1% | lr: 0.000097                                                                                                    
+Epoch 12/100 | train: 0.0484 | val: 0.0471 | gap: -2.8% | lr: 0.000096                                                                                                    
+Epoch 13/100 | train: 0.2939 | val: 0.0470 | gap: -84.0% | lr: 0.000096                                                                                                   
+Epoch 14/100 | train: 0.0487 | val: 0.0465 | gap: -4.6% | lr: 0.000095                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0465)
+Epoch 15/100 | train: 0.0482 | val: 0.0465 | gap: -3.5% | lr: 0.000095                                                                                                    
+Epoch 16/100 | train: 0.0479 | val: 0.0463 | gap: -3.5% | lr: 0.000094                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0463)
+Epoch 17/100 | train: 0.0481 | val: 0.0459 | gap: -4.5% | lr: 0.000093                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0459)
+Epoch 18/100 | train: 0.0477 | val: 0.0463 | gap: -2.9% | lr: 0.000092                                                                                                    
+Epoch 19/100 | train: 0.0479 | val: 0.0458 | gap: -4.4% | lr: 0.000091                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0458)
+Epoch 20/100 | train: 0.0476 | val: 0.0457 | gap: -3.9% | lr: 0.000090                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0457)
+Epoch 21/100 | train: 0.0479 | val: 0.0457 | gap: -4.6% | lr: 0.000090                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0457)
+Epoch 22/100 | train: 0.0476 | val: 0.0490 | gap: +3.1% | lr: 0.000089                                                                                                    
+Epoch 23/100 | train: 0.0481 | val: 0.0456 | gap: -5.0% | lr: 0.000088                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0456)
+Epoch 24/100 | train: 0.0475 | val: 0.0455 | gap: -4.2% | lr: 0.000086                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0455)
+Epoch 25/100 | train: 0.0474 | val: 0.0460 | gap: -2.8% | lr: 0.000085                                                                                                    
+Epoch 26/100 | train: 0.0479 | val: 0.0473 | gap: -1.1% | lr: 0.000084                                                                                                    
+Epoch 27/100 | train: 0.0474 | val: 0.0454 | gap: -4.3% | lr: 0.000083                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0454)
+Epoch 28/100 | train: 0.0472 | val: 0.0453 | gap: -4.1% | lr: 0.000082                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0453)
+Epoch 29/100 | train: 0.0470 | val: 0.0453 | gap: -3.7% | lr: 0.000081                                                                                                    
+Epoch 30/100 | train: 0.0473 | val: 0.0452 | gap: -4.5% | lr: 0.000079                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0452)
+Epoch 31/100 | train: 0.0473 | val: 0.0452 | gap: -4.4% | lr: 0.000078                                                                                                    
+  -> saved new best checkpoint (val_loss: 0.0452)
+Epoch 32/100 | train: 0.0469 | val: 0.0453 | gap: -3.4% | lr: 0.000077                                                                                                    
+Epoch 33/100 | train: 0.0974 | val: 0.0649 | gap: -33.4% | lr: 0.000075                                                                                                   
+Epoch 34/100 | train: 0.0575 | val: 0.0491 | gap: -14.6% | lr: 0.000074                                                                                                   
+Epoch 35/100 | train: 0.0495 | val: 0.0465 | gap: -6.1% | lr: 0.000073                                                                                                    
+Epoch 36/100 | train: 0.0480 | val: 0.0459 | gap: -4.2% | lr: 0.000071                                                                                                    
+Epoch 37/100 | train: 0.0476 | val: 0.0455 | gap: -4.3% | lr: 0.000070                                                                                                    
+Epoch 38/100 | train: 0.0473 | val: 0.0455 | gap: -3.9% | lr: 0.000068                                                                                                    
+
+Stopping early at epoch 38: No val_loss improvement for 7 epochs (best: 0.0452)
+Best checkpoint retained at checkpoints/best_model_attn_fidelity.pt (val_loss: 0.0452)
+Saved loss curve to checkpoints/loss_curve_attn_fidelity.png
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> 

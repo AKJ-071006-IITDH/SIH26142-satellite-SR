@@ -1,0 +1,33 @@
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> python -m src.train_phase4
+Training Phase 4 (Adversarial GAN) on: cuda
+Train batches: 154 | Val batches: 31
+Successfully warm-started Generator from Phase 3 checkpoint (val_loss: 0.0301)
+Epoch 1/100 | G_loss: 0.0293 | val_loss: 0.0301 | gap: +2.9% | lr: 0.000020
+  -> saved new Phase 4 best checkpoint (val_loss: 0.0301)
+Epoch 2/100 | G_loss: 0.0302 | val_loss: 0.0303 | gap: +0.4% | lr: 0.000020
+Epoch 3/100 | G_loss: 0.0305 | val_loss: 0.0305 | gap: -0.1% | lr: 0.000020
+Epoch 4/100 | G_loss: 0.0307 | val_loss: 0.0307 | gap: -0.2% | lr: 0.000020
+Epoch 5/100 | G_loss: 0.0310 | val_loss: 0.0309 | gap: -0.2% | lr: 0.000020
+Epoch 6/100 | G_loss: 0.0308 | val_loss: 0.0307 | gap: -0.5% | lr: 0.000020
+Epoch 7/100 | G_loss: 0.0309 | val_loss: 0.0306 | gap: -1.0% | lr: 0.000020
+
+Stopping early at epoch 7: No val_loss improvement for 6 epochs (best: 0.0301)
+
+Phase 4 Adversarial Training Completed!
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> python -m src.eval.evaluate --checkpoint checkpoints/best_model_phase4.pt
+Test set results (163 patches):
+  PSNR: 36.9498
+  SSIM: 0.8670
+  SAM: 3.2249
+  ERGAS: 4.0248
+
+
+
+
+
+  (sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> python -m src.eval.evaluate --checkpoint checkpoints/best_model_phase5.pt --split test
+Test set results (163 patches):
+  PSNR: 36.9442
+  SSIM: 0.8670
+  SAM: 3.2264
+  ERGAS: 4.0301
