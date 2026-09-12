@@ -1,0 +1,162 @@
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> python -m src.train_v2_gan
+Training AttentionRRDBNet [adversarial refinement] on: cuda
+  generator loss: pixel=1.0 ssim=0.15 spectral=0.3 vgg=0.1 adv=0.005
+  lr_g=5e-05  lr_d=0.0001
+Train batches: 307
+Warm-started generator from checkpoints/best_model_attn.pt (epoch 97, val_loss 0.0652)
+Perceptual features: frozen VGG19 conv5_4 (ImageNet), RGB bands only
+AMP dtype: torch.bfloat16 (GradScaler off -- not needed for bf16)
+C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torchvision\models\_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torchvision\models\_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Selecting checkpoints on LPIPS (alex) over 96 val patches
+Epoch 1/40 | G: 0.1361 | D: 0.4545 | pixel:0.0118 ssim:0.0177 spectral:0.0136 vgg:0.0855 adv:0.0074                                                     
+           PSNR 37.211 | SSIM 0.8710 | LPIPS 0.1791 | HF 0.578  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1791)
+Epoch 2/40 | G: 0.1365 | D: 0.3326 | pixel:0.0126 ssim:0.0191 spectral:0.0141 vgg:0.0778 adv:0.0130                                                     
+           PSNR 36.309 | SSIM 0.8540 | LPIPS 0.1506 | HF 0.721  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1506)
+Epoch 3/40 | G: 0.1410 | D: 0.3179 | pixel:0.0131 ssim:0.0206 spectral:0.0147 vgg:0.0771 adv:0.0155                                                     
+           PSNR 36.570 | SSIM 0.8551 | LPIPS 0.1186 | HF 0.724  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1186)
+Epoch 4/40 | G: 0.1428 | D: 0.2710 | pixel:0.0131 ssim:0.0208 spectral:0.0149 vgg:0.0773 adv:0.0168                                                     
+           PSNR 36.129 | SSIM 0.8408 | LPIPS 0.1305 | HF 0.779  (HF 1.000 = as sharp as ground truth)
+Epoch 5/40 | G: 0.1472 | D: 0.2603 | pixel:0.0133 ssim:0.0213 spectral:0.0161 vgg:0.0778 adv:0.0187                                                     
+           PSNR 35.924 | SSIM 0.8395 | LPIPS 0.1228 | HF 0.812  (HF 1.000 = as sharp as ground truth)
+Epoch 6/40 | G: 0.1450 | D: 0.3174 | pixel:0.0135 ssim:0.0218 spectral:0.0158 vgg:0.0777 adv:0.0162                                                     
+           PSNR 35.906 | SSIM 0.8344 | LPIPS 0.1331 | HF 0.834  (HF 1.000 = as sharp as ground truth)
+Epoch 7/40 | G: 0.1455 | D: 0.3212 | pixel:0.0135 ssim:0.0221 spectral:0.0158 vgg:0.0773 adv:0.0167                                                     
+           PSNR 36.208 | SSIM 0.8430 | LPIPS 0.1335 | HF 0.738  (HF 1.000 = as sharp as ground truth)
+Epoch 8/40 | G: 0.1458 | D: 0.2939 | pixel:0.0135 ssim:0.0222 spectral:0.0159 vgg:0.0771 adv:0.0171                                                     
+           PSNR 35.662 | SSIM 0.8359 | LPIPS 0.1220 | HF 0.802  (HF 1.000 = as sharp as ground truth)
+Epoch 9/40 | G: 0.1836 | D: 0.1903 | pixel:0.0157 ssim:0.0244 spectral:0.0403 vgg:0.0794 adv:0.0238                                                     
+           PSNR 35.593 | SSIM 0.8429 | LPIPS 0.1660 | HF 0.693  (HF 1.000 = as sharp as ground truth)
+Epoch 10/40 | G: 0.1617 | D: 0.2129 | pixel:0.0139 ssim:0.0224 spectral:0.0226 vgg:0.0785 adv:0.0244                                                    
+           PSNR 33.924 | SSIM 0.8167 | LPIPS 0.1391 | HF 0.797  (HF 1.000 = as sharp as ground truth)
+Epoch 11/40 | G: 0.4481 | D: 0.1671 | pixel:0.0315 ssim:0.0420 spectral:0.2513 vgg:0.0928 adv:0.0306                                                    
+           PSNR 32.186 | SSIM 0.7542 | LPIPS 0.2582 | HF 0.884  (HF 1.000 = as sharp as ground truth)
+Epoch 12/40 | G: 1.5423 | D: 0.1668 | pixel:0.8422 ssim:0.1412 spectral:0.3659 vgg:0.1602 adv:0.0328                                                    
+           PSNR 21.957 | SSIM 0.2983 | LPIPS 0.6877 | HF 29.544  (HF 1.000 = as sharp as ground truth)
+Traceback (most recent call last):                                                                                                                      
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\AAYUSH KUMAR JHA\sih26142-srm\src\train_v2_gan.py", line 256, in <module>
+    train()
+  File "C:\Users\AAYUSH KUMAR JHA\sih26142-srm\src\train_v2_gan.py", line 164, in train
+    loss_d = criterion_d(discriminator(hr_batch), discriminator(fake_det))
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torch\nn\modules\module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torch\nn\modules\module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AAYUSH KUMAR JHA\sih26142-srm\src\models\discriminator.py", line 36, in forward
+    return self.model(x)
+           ^^^^^^^^^^^^^
+  File "C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torch\nn\modules\module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torch\nn\modules\module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torch\nn\modules\container.py", line 253, in forward
+    input = module(input)
+            ^^^^^^^^^^^^^
+  File "C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torch\nn\modules\module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torch\nn\modules\module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torch\nn\modules\batchnorm.py", line 210, in forward
+    return F.batch_norm(
+           ^^^^^^^^^^^^^
+  File "C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torch\nn\functional.py", line 2898, in batch_norm
+    return torch.batch_norm(
+           ^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> python -m src.eval.perceptual_metrics --compare
+Scoring on 326 patches from the 'test' split (device: cuda)
+
+C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torchvision\models\_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torchvision\models\_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+LPIPS backbone: alex (deliberately not VGG -- the GAN script trains against VGG19)
+
+model                PSNR     SSIM      SAM    ERGAS     LPIPS   HF ratio
+-------------------------------------------------------------------------
+bicubic            33.501   0.7922    5.253    5.762    0.3808      0.546
+rrdb_phase2        36.820   0.8693    3.049    3.880    0.2580      0.504
+attn               37.266   0.8780    2.882    3.695    0.2303      0.520
+attn_fidelity      37.021   0.8750    3.007    3.787    0.2405      0.521
+attn_gan           36.099   0.8514    3.392    4.216    0.1230      0.699
+------------------------------------------------------^C                                                                                                 
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> ^CHF ratio: 1.000 = as sharp as truth
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> ^C
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> ^C
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> ^C
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> ^C
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> python -m src.eval.visualize --checkpoint checkpoints/best_model_attn_gan.pt --num_samples 6 --out demo/visual_eval_attn_gan.png
+Saved visual comparison grid: demo/visual_eval_attn_gan.png
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> python -c "from src.train_v2_gan import train; train(lr_d=2e-5, w_adv=3e-3, w_spectral=0.5, num_epochs=15, run_suffix='_v2')"
+Training AttentionRRDBNet [adversarial refinement] on: cuda
+  generator loss: pixel=1.0 ssim=0.15 spectral=0.5 vgg=0.1 adv=0.003
+  lr_g=5e-05  lr_d=2e-05
+  writing to: checkpoints/best_model_attn_gan_v2.pt
+Train batches: 307
+Warm-started generator from checkpoints/best_model_attn.pt (epoch 97, val_loss 0.0652)
+Perceptual features: frozen VGG19 conv5_4 (ImageNet), RGB bands only
+AMP dtype: torch.bfloat16 (GradScaler off -- not needed for bf16)
+C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torchvision\models\_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torchvision\models\_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Selecting checkpoints on LPIPS (alex) over 96 val patches
+Epoch 1/15 | G: 0.1405 | D: 0.6343 | pixel:0.0117 ssim:0.0176 spectral:0.0224 vgg:0.0861 adv:0.0027                                                     
+           PSNR 37.289 | SSIM 0.8722 | LPIPS 0.1735 | HF 0.550  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1735)
+Epoch 2/15 | G: 0.1333 | D: 0.4558 | pixel:0.0118 ssim:0.0178 spectral:0.0225 vgg:0.0774 adv:0.0038                                                     
+           PSNR 37.338 | SSIM 0.8736 | LPIPS 0.1719 | HF 0.564  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1719)
+Epoch 3/15 | G: 0.1333 | D: 0.3399 | pixel:0.0119 ssim:0.0179 spectral:0.0225 vgg:0.0757 adv:0.0053                                                     
+           PSNR 37.092 | SSIM 0.8705 | LPIPS 0.1616 | HF 0.587  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1616)
+Epoch 4/15 | G: 0.1339 | D: 0.3506 | pixel:0.0121 ssim:0.0183 spectral:0.0227 vgg:0.0750 adv:0.0058                                                     
+           PSNR 37.068 | SSIM 0.8679 | LPIPS 0.1678 | HF 0.618  (HF 1.000 = as sharp as ground truth)
+Epoch 5/15 | G: 0.1343 | D: 0.4125 | pixel:0.0124 ssim:0.0190 spectral:0.0230 vgg:0.0746 adv:0.0054                                                     
+           PSNR 36.926 | SSIM 0.8654 | LPIPS 0.1686 | HF 0.635  (HF 1.000 = as sharp as ground truth)
+Epoch 6/15 | G: 0.1346 | D: 0.3313 | pixel:0.0123 ssim:0.0189 spectral:0.0229 vgg:0.0740 adv:0.0066                                                     
+           PSNR 36.909 | SSIM 0.8655 | LPIPS 0.1584 | HF 0.651  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1584)
+Epoch 7/15 | G: 0.1352 | D: 0.3285 | pixel:0.0125 ssim:0.0191 spectral:0.0230 vgg:0.0735 adv:0.0072                                                     
+           PSNR 37.041 | SSIM 0.8671 | LPIPS 0.1621 | HF 0.635  (HF 1.000 = as sharp as ground truth)
+Epoch 8/15 | G: 0.1350 | D: 0.3491 | pixel:0.0126 ssim:0.0193 spectral:0.0231 vgg:0.0728 adv:0.0072                                                     
+           PSNR 36.815 | SSIM 0.8628 | LPIPS 0.1540 | HF 0.685  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1540)
+Epoch 9/15 | G: 0.1354 | D: 0.3513 | pixel:0.0127 ssim:0.0195 spectral:0.0232 vgg:0.0730 adv:0.0071                                                     
+           PSNR 36.822 | SSIM 0.8626 | LPIPS 0.1495 | HF 0.687  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1495)
+Epoch 10/15 | G: 0.1353 | D: 0.3673 | pixel:0.0127 ssim:0.0197 spectral:0.0234 vgg:0.0725 adv:0.0069                                                    
+           PSNR 36.565 | SSIM 0.8592 | LPIPS 0.1486 | HF 0.704  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1486)
+Epoch 11/15 | G: 0.1349 | D: 0.4280 | pixel:0.0129 ssim:0.0202 spectral:0.0236 vgg:0.0722 adv:0.0061                                                    
+           PSNR 36.365 | SSIM 0.8560 | LPIPS 0.1477 | HF 0.723  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1477)
+Epoch 12/15 | G: 0.1349 | D: 0.4000 | pixel:0.0129 ssim:0.0203 spectral:0.0237 vgg:0.0720 adv:0.0060                                                    
+           PSNR 36.361 | SSIM 0.8562 | LPIPS 0.1458 | HF 0.721  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1458)
+Epoch 13/15 | G: 0.1352 | D: 0.3744 | pixel:0.0129 ssim:0.0203 spectral:0.0235 vgg:0.0719 adv:0.0066                                                    
+           PSNR 36.400 | SSIM 0.8561 | LPIPS 0.1442 | HF 0.721  (HF 1.000 = as sharp as ground truth)
+  -> new best perceptual checkpoint (LPIPS 0.1442)
+Epoch 14/15 | G: 0.1348 | D: 0.3770 | pixel:0.0129 ssim:0.0202 spectral:0.0235 vgg:0.0717 adv:0.0065                                                    
+           PSNR 36.419 | SSIM 0.8567 | LPIPS 0.1474 | HF 0.715  (HF 1.000 = as sharp as ground truth)
+Epoch 15/15 | G: 0.1350 | D: 0.3728 | pixel:0.0129 ssim:0.0202 spectral:0.0235 vgg:0.0718 adv:0.0066                                                    
+           PSNR 36.441 | SSIM 0.8571 | LPIPS 0.1472 | HF 0.715  (HF 1.000 = as sharp as ground truth)
+Saved loss curve to checkpoints/loss_curve_attn_gan_v2.png
+
+Done. Compare against the fidelity models with:
+  python -m src.eval.perceptual_metrics --compare
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> 

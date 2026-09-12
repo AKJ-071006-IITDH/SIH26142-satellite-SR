@@ -1,0 +1,20 @@
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> python -m src.eval.perceptual_metrics --compare
+Scoring on 326 patches from the 'test' split (device: cuda)
+
+C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torchvision\models\_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+C:\Users\AAYUSH KUMAR JHA\anaconda3\envs\sih26142\Lib\site-packages\torchvision\models\_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Downloading: "https://download.pytorch.org/models/alexnet-owt-7be5be79.pth" to C:\Users\AAYUSH KUMAR JHA/.cache\torch\hub\checkpoints\alexnet-owt-7be5be79.pth
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 233M/233M [00:38<00:00, 6.42MB/s]
+LPIPS backbone: alex (deliberately not VGG -- the GAN script trains against VGG19)
+
+model                PSNR     SSIM      SAM    ERGAS     LPIPS   HF ratio
+-------------------------------------------------------------------------
+bicubic            33.502   0.7921    5.252    5.763    0.3814      0.546
+rrdb_phase2        36.819   0.8693    3.049    3.881    0.2579      0.504
+attn               37.268   0.8780    2.880    3.695    0.2302      0.520
+attn_fidelity      37.025   0.8750    3.007    3.787    0.2402      0.520
+-------------------------------------------------------------------------
+PSNR/SSIM up = better · SAM/ERGAS/LPIPS down = better · HF ratio: 1.000 = as sharp as truth
+(sih26142) PS C:\Users\AAYUSH KUMAR JHA\sih26142-srm> 

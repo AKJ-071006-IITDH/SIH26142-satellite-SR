@@ -80,13 +80,57 @@ class RRDBAttn(nn.Module):
         return x + 0.2 * out
 
 
+def icnr_(weight, upscale_factor=2, initializer=nn.init.kaiming_normal_):
+    """
+    ICNR: initialise a sub-pixel conv so it starts as exact nearest-neighbour
+    upsampling, with zero checkerboard.
+
+    PixelShuffle(r) sends conv output channels c*r^2 .. c*r^2+r^2-1 to the r x r
+    block of output channel c. Those r^2 channels come from r^2 *different*
+    kernels, initialised independently -- so from step zero they disagree, and
+    that disagreement tiles across the whole image as a fixed r x r pattern.
+    Fourier analysis of this project's own checkpoints measured it: period-4
+    power 3677x the image median in a model that never saw a discriminator,
+    against 57.6x in the ground truth.
+
+    The fix is to initialise those r^2 kernels as identical copies. Every r x r
+    block is then uniform, the upsampler behaves exactly like nearest-neighbour
+    resizing, and training has to learn its way *into* any checkerboard rather
+    than starting with one. Same reasoning as the zero-initialised conv_last
+    below: begin from a known-good state, not a random one.
+
+    Only meaningful at initialisation -- loading a checkpoint overwrites it.
+    """
+    out_ch, in_ch, kh, kw = weight.shape
+    r2 = upscale_factor ** 2
+    if out_ch % r2 != 0:
+        raise ValueError(f"out_channels {out_ch} not divisible by upscale_factor^2 {r2}")
+
+    base = torch.zeros(out_ch // r2, in_ch, kh, kw, device=weight.device, dtype=weight.dtype)
+    initializer(base)
+    # repeat_interleave, not repeat: copies of base kernel c must land
+    # contiguously at c*r^2 .. c*r^2+r^2-1 to match PixelShuffle's layout
+    with torch.no_grad():
+        weight.copy_(base.repeat_interleave(r2, dim=0))
+
+
 class UpsampleBlock(nn.Module):
-    """Pixel-shuffle upsampling -- same choice as rrdb.py, avoids checkerboard artifacts."""
-    def __init__(self, channels=64, scale_factor=2):
+    """
+    Pixel-shuffle upsampling -- no transposed-conv overlap, so no artifacts
+    from *that* source. It has its own checkerboard mode though, which
+    icnr_init addresses; see icnr_() above.
+    """
+    def __init__(self, channels=64, scale_factor=2, icnr_init=False):
         super().__init__()
         self.conv = nn.Conv2d(channels, channels * (scale_factor ** 2), 3, padding=1)
         self.pixel_shuffle = nn.PixelShuffle(scale_factor)
         self.lrelu = nn.LeakyReLU(0.2, inplace=True)
+
+        if icnr_init:
+            icnr_(self.conv.weight, upscale_factor=scale_factor)
+            # a per-channel bias differs across the r^2 sub-pixels and would
+            # reintroduce exactly the pattern icnr_ just removed
+            nn.init.zeros_(self.conv.bias)
 
     def forward(self, x):
         return self.lrelu(self.pixel_shuffle(self.conv(x)))
@@ -108,7 +152,8 @@ class AttentionRRDBNet(nn.Module):
     here.
     """
     def __init__(self, in_channels=4, out_channels=4, base_channels=64,
-                 num_blocks=8, growth_channels=32, scale_factor=4, dropout_rate=0.1):
+                 num_blocks=8, growth_channels=32, scale_factor=4, dropout_rate=0.1,
+                 icnr_init=False):
         super().__init__()
         self.scale_factor = scale_factor
 
@@ -122,7 +167,8 @@ class AttentionRRDBNet(nn.Module):
         assert scale_factor in (2, 4, 8), "build via chained x2 stages"
         num_upsample_stages = {2: 1, 4: 2, 8: 3}[scale_factor]
         self.upsample = nn.Sequential(
-            *[UpsampleBlock(base_channels, scale_factor=2) for _ in range(num_upsample_stages)]
+            *[UpsampleBlock(base_channels, scale_factor=2, icnr_init=icnr_init)
+              for _ in range(num_upsample_stages)]
         )
 
         self.conv_hr = nn.Conv2d(base_channels, base_channels, 3, padding=1)

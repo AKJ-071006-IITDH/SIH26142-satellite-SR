@@ -44,21 +44,30 @@ def resize_for_display(lr_chw: np.ndarray, target_hw) -> np.ndarray:
                 mode="reflect", anti_aliasing=False)
     return up.transpose(2, 0, 1).astype(np.float32)
 
-def visualize_all(checkpoint_path="checkpoints/best_model_phase2.pt", split="test", out_dir="demo/full_test_set"):
+def visualize_all(checkpoint_path="checkpoints/best_model_phase2.pt", split="test",
+                  out_dir="demo/full_test_set", manifest=None):
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     # 1. Setup Model
     model = load_model(checkpoint_path, device)
 
     # 2. Setup Dataset
-    dataset = SatelliteSRDataset(augment=False)
-    with open(f"data/splits/{split}.json") as f:
-        files = set(json.load(f))
-    indices = [i for i, f in enumerate(dataset.patch_files) if str(f) in files]
+    if manifest:
+        from src.data.tile_dataset import TileSRDataset
+        dataset = TileSRDataset(split, manifest_path=manifest, augment=False)
+        indices = list(range(len(dataset)))
+        name_of = lambda i: f"{split}_{i:04d}"
+    else:
+        dataset = SatelliteSRDataset(augment=False)
+        with open(f"data/splits/{split}.json") as f:
+            files = set(json.load(f))
+        indices = [i for i, f in enumerate(dataset.patch_files) if str(f) in files]
+        name_of = lambda i: dataset.patch_files[i].stem
 
     # 3. Create Output Directory
     Path(out_dir).mkdir(parents=True, exist_ok=True)
-    print(f"Saving {len(indices)} test patches to {out_dir}/...")
+    print(f"Saving {len(indices)} {split} patches to {out_dir}/"
+          f"{' (leak-free manifest)' if manifest else ''}...")
 
     col_titles = ["LR Input", "Model SR Output", "Ground Truth HR"]
     
@@ -68,7 +77,7 @@ def visualize_all(checkpoint_path="checkpoints/best_model_phase2.pt", split="tes
             lr_np = lr_t.numpy()
             hr_np = hr_t.numpy()
             target_hw = (hr_t.shape[1], hr_t.shape[2])
-            patch_name = dataset.patch_files[idx].stem # Gets name without .npy
+            patch_name = name_of(idx)
 
             # Get Model Prediction
             pred_t = model(lr_t.unsqueeze(0).to(device))[0].cpu().clamp(0, 1)
@@ -101,5 +110,9 @@ if __name__ == "__main__":
     parser.add_argument("--checkpoint", default="checkpoints/best_model_phase2.pt")
     parser.add_argument("--split", default="test")
     parser.add_argument("--out_dir", default="demo/full_test_set")
+    parser.add_argument("--manifest", nargs="?", const="data/splits/manifest_spatial.json",
+                         default=None,
+                         help="use the leak-free manifest split")
     args = parser.parse_args()
-    visualize_all(checkpoint_path=args.checkpoint, split=args.split, out_dir=args.out_dir)
+    visualize_all(checkpoint_path=args.checkpoint, split=args.split,
+                  out_dir=args.out_dir, manifest=args.manifest)
